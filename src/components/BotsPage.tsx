@@ -115,57 +115,69 @@ const BotsPage = () => {
         </Card>
       </div>
 
-      {/* Bots Table */}
+      {/* Bots Cards */}
       <Card>
         <CardHeader>
           <CardTitle>Seus Bots</CardTitle>
           <CardDescription>Lista completa dos bots e suas métricas</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Mensagens</TableHead>
-                <TableHead>Conversões</TableHead>
-                <TableHead>Performance</TableHead>
-                <TableHead>Última Atividade</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {bots.map((bot) => (
-                <TableRow key={bot.id}>
-                  <TableCell className="font-medium">{bot.name}</TableCell>
-                  <TableCell>
-                    <Badge variant={bot.status === 'Ativo' ? 'default' : 'secondary'}>
-                      {bot.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{bot.messages.toLocaleString()}</TableCell>
-                  <TableCell>{bot.conversions}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <Progress value={bot.performance} className="w-[60px] h-2" />
-                      <span className="text-sm text-muted-foreground">{bot.performance}%</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {bots.map((bot) => (
+              <Card key={bot.id} className="relative">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="p-2 rounded-lg bg-primary/10">
+                        <Bot className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-base">{bot.name}</CardTitle>
+                        <Badge variant={bot.status === 'Ativo' ? 'default' : 'secondary'} className="text-xs">
+                          {bot.status}
+                        </Badge>
+                      </div>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">{bot.lastActive}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button size="sm" variant="outline">
+                    <div className="flex gap-1">
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
                         {bot.status === 'Ativo' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                       </Button>
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
                         <Settings className="h-4 w-4" />
                       </Button>
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">Mensagens</p>
+                        <p className="font-semibold">{bot.messages.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Conversões</p>
+                        <p className="font-semibold">{bot.conversions}</p>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-muted-foreground">Performance</span>
+                        <span className="font-medium">{bot.performance}%</span>
+                      </div>
+                      <Progress value={bot.performance} className="h-2" />
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>Última atividade</span>
+                      <span>{bot.lastActive}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </CardContent>
       </Card>
 
