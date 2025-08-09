@@ -24,10 +24,6 @@ import {
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard", active: true },
-  { icon: Users, label: "Usuários" },
-  { icon: TrendingUp, label: "Analytics" },
-  { icon: ShoppingCart, label: "Vendas" },
-  { icon: Settings, label: "Configurações" },
 ]
 
 const chartData = [
