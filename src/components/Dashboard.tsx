@@ -89,12 +89,6 @@ export function Dashboard() {
                 <h1 className="text-2xl font-semibold text-foreground">Dashboard Analytics</h1>
               </div>
               <div className="flex items-center gap-4">
-                <Button variant="outline" size="sm">
-                  <Search className="h-4 w-4" />
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Bell className="h-4 w-4" />
-                </Button>
                 <ThemeToggle />
                 <Avatar>
                   <AvatarFallback>AD</AvatarFallback>
