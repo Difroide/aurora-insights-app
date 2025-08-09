@@ -72,7 +72,7 @@ const chartData = [
 
 const FunisPage = () => {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -94,9 +94,9 @@ const FunisPage = () => {
           <CardDescription>Performance detalhada de cada funil de vendas</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in">
             {funis.map((funil) => (
-              <Card key={funil.id} className="relative">
+              <Card key={funil.id} className="relative hover-scale">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

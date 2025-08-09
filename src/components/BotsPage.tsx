@@ -80,7 +80,7 @@ const BotsPage = () => {
     setFormData({ nome: "", token: "", funil: "" })
   }
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -161,9 +161,9 @@ const BotsPage = () => {
           <CardDescription>Lista completa dos bots e suas métricas</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in">
             {bots.map((bot) => (
-              <Card key={bot.id} className="relative">
+              <Card key={bot.id} className="relative hover-scale">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

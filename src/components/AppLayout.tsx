@@ -55,8 +55,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         </Sidebar>
 
         <div className="flex-1 flex flex-col">
-          {/* Header */}
-          <header className="border-b border-border bg-card px-6 py-4">
+          <header className="border-b border-border header-gradient px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <SidebarTrigger />
@@ -70,8 +69,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             </div>
           </header>
 
-          {/* Main Content */}
-          <main className="flex-1">
+          <main className="flex-1 animate-fade-in">
             {children}
           </main>
         </div>

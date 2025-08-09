@@ -121,3 +121,51 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Extra design tokens and utilities */
+:root {
+  /* Additional semantic tokens */
+  --primary-glow: 264 74% 70%;
+  --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+  --gradient-subtle: linear-gradient(90deg, hsl(var(--primary) / 0.06), hsl(var(--accent) / 0.06));
+  --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.25);
+  --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.35);
+}
+
+@layer utilities {
+  /* Underline animation utility */
+  .story-link {
+    position: relative;
+    display: inline-block;
+  }
+  .story-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background: hsl(var(--primary));
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 300ms;
+  }
+  .story-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+
+  /* Hover scale utility */
+  .hover-scale {
+    transition: transform 200ms;
+  }
+  .hover-scale:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  /* Header gradient utility */
+  .header-gradient {
+    background-image: var(--gradient-subtle);
+    box-shadow: var(--shadow-sm);
+  }
+}
