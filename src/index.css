@@ -168,4 +168,40 @@ All colors MUST be HSL.
     background-image: var(--gradient-subtle);
     box-shadow: var(--shadow-sm);
   }
+
+  /* Gradient text utility */
+  .gradient-text {
+    background-image: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Card hover elevation */
+  .card-hover {
+    transition: transform 200ms, box-shadow 200ms, border-color 200ms;
+    border-color: hsl(var(--border));
+  }
+  .card-hover:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: var(--shadow-lg);
+    border-color: hsl(var(--ring));
+  }
+
+  /* Glass effect card */
+  .glass-card {
+    background: hsl(var(--card) / 0.85);
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    border: 1px solid hsl(var(--border));
+  }
+
+  /* Gradient button helper */
+  .btn-gradient {
+    background-image: var(--gradient-primary);
+    color: hsl(var(--primary-foreground));
+  }
+  .btn-gradient:hover {
+    filter: brightness(1.05);
+  }
 }

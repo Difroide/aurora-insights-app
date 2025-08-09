@@ -42,14 +42,14 @@ export function Dashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Dashboard Analytics</h1>
+          <h1 className="text-3xl font-bold gradient-text">Dashboard Analytics</h1>
           <p className="text-muted-foreground">Visão geral das suas métricas</p>
         </div>
       </div>
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="hover-scale">
+        <Card className="card-hover hover-scale">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -60,7 +60,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="hover-scale">
+        <Card className="card-hover hover-scale">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Usuários Ativos</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -71,7 +71,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="hover-scale">
+        <Card className="card-hover hover-scale">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Vendas</CardTitle>
             <ShoppingCart className="h-4 w-4 text-muted-foreground" />
@@ -82,7 +82,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="hover-scale">
+        <Card className="card-hover hover-scale">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Taxa de Conversão</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
@@ -95,7 +95,7 @@ export function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
-        <Card className="hover-scale">
+        <Card className="card-hover hover-scale">
           <CardHeader>
             <CardTitle>Vendas por Mês</CardTitle>
             <CardDescription>Comparativo de vendas e usuários</CardDescription>
@@ -113,7 +113,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="hover-scale">
+        <Card className="card-hover hover-scale">
           <CardHeader>
             <CardTitle>Dispositivos de Acesso</CardTitle>
             <CardDescription>Distribuição por tipo de dispositivo</CardDescription>
@@ -143,7 +143,7 @@ export function Dashboard() {
 
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 card-hover">
           <CardHeader>
             <CardTitle>Usuários Recentes</CardTitle>
             <CardDescription>Lista dos últimos usuários cadastrados</CardDescription>
@@ -176,7 +176,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="card-hover">
           <CardHeader>
             <CardTitle>Metas do Mês</CardTitle>
             <CardDescription>Progresso das principais métricas</CardDescription>
@@ -215,7 +215,7 @@ export function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-        <Card className="hover-scale">
+        <Card className="card-hover hover-scale">
           <CardHeader>
             <CardTitle className="text-base">Relatórios</CardTitle>
             <CardDescription>Gere relatórios detalhados</CardDescription>
@@ -228,7 +228,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="hover-scale">
+        <Card className="card-hover hover-scale">
           <CardHeader>
             <CardTitle className="text-base">Analytics</CardTitle>
             <CardDescription>Veja métricas avançadas</CardDescription>
@@ -241,7 +241,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="hover-scale">
+        <Card className="card-hover hover-scale">
           <CardHeader>
             <CardTitle className="text-base">Configurações</CardTitle>
             <CardDescription>Ajuste suas preferências</CardDescription>

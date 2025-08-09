@@ -55,7 +55,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         </Sidebar>
 
         <div className="flex-1 flex flex-col">
-          <header className="border-b border-border header-gradient px-6 py-4">
+          <header className="sticky top-0 z-40 border-b border-border header-gradient px-6 py-4 supports-[backdrop-filter]:backdrop-blur-md">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <SidebarTrigger />

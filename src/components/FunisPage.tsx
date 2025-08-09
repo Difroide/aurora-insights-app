@@ -76,7 +76,7 @@ const FunisPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Funis de Vendas</h1>
+          <h1 className="text-3xl font-bold gradient-text">Funis de Vendas</h1>
           <p className="text-muted-foreground">Gerencie suas estratégias de conversão</p>
         </div>
         <Button>
@@ -96,7 +96,7 @@ const FunisPage = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in">
             {funis.map((funil) => (
-              <Card key={funil.id} className="relative hover-scale">
+              <Card key={funil.id} className="relative card-hover hover-scale">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
