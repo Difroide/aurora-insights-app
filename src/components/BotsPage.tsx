@@ -220,47 +220,6 @@ const BotsPage = () => {
         </CardContent>
       </Card>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Templates</CardTitle>
-            <CardDescription>Use templates prontos</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full" variant="outline">
-              <Bot className="h-4 w-4 mr-2" />
-              Ver Templates
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Analytics</CardTitle>
-            <CardDescription>Relatórios detalhados</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full">
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Ver Relatórios
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Configurações</CardTitle>
-            <CardDescription>Ajustes globais</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full" variant="secondary">
-              <Settings className="h-4 w-4 mr-2" />
-              Configurar
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   )
 }
