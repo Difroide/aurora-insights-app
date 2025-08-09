@@ -1,7 +1,12 @@
 import FunisPage from "@/components/FunisPage";
+import { AppLayout } from "@/components/AppLayout";
 
 const Funis = () => {
-  return <FunisPage />;
+  return (
+    <AppLayout>
+      <FunisPage />
+    </AppLayout>
+  );
 };
 
 export default Funis;
