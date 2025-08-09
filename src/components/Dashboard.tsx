@@ -19,11 +19,15 @@ import {
   DollarSign,
   Activity,
   Download,
-  Eye
+  Eye,
+  Bot,
+  Zap
 } from "lucide-react"
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: "Dashboard", active: true },
+  { icon: LayoutDashboard, label: "Dashboard", href: "/", active: true },
+  { icon: Bot, label: "Bots", href: "/bots", active: false },
+  { icon: Zap, label: "Funis", href: "/funis", active: false },
 ]
 
 const chartData = [
@@ -68,9 +72,11 @@ export function Dashboard() {
                 <SidebarMenu>
                   {sidebarItems.map((item) => (
                     <SidebarMenuItem key={item.label}>
-                      <SidebarMenuButton isActive={item.active} className="w-full">
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.label}</span>
+                      <SidebarMenuButton asChild isActive={item.active}>
+                        <a href={item.href} className="w-full">
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.label}</span>
+                        </a>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
