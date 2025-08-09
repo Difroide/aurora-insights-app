@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Progress } from "@/components/ui/progress"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts'
 import { 
   LayoutDashboard, 
@@ -98,6 +99,7 @@ export function Dashboard() {
                 <Button variant="outline" size="sm">
                   <Bell className="h-4 w-4" />
                 </Button>
+                <ThemeToggle />
                 <Avatar>
                   <AvatarFallback>AD</AvatarFallback>
                 </Avatar>
