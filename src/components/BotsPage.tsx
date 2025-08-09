@@ -1,8 +1,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Progress } from "@/components/ui/progress"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { useState } from "react"
 import { 
   Bot,
   Plus,
@@ -53,66 +58,103 @@ const bots = [
   },
 ]
 
+const funis = [
+  { id: "1", name: "Funil de Vendas Premium" },
+  { id: "2", name: "Funil Webinar Gratuito" },
+  { id: "3", name: "Funil E-book Marketing" },
+  { id: "4", name: "Funil Consultoria" },
+]
+
 const BotsPage = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [formData, setFormData] = useState({
+    nome: "",
+    token: "",
+    funil: ""
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log("Novo bot:", formData)
+    setIsDialogOpen(false)
+    setFormData({ nome: "", token: "", funil: "" })
+  }
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Bots</h1>
-          <p className="text-muted-foreground">Gerencie seus bots automatizados</p>
+        <div className="flex items-center gap-4">
+          <SidebarTrigger />
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Bots</h1>
+            <p className="text-muted-foreground">Gerencie seus bots automatizados</p>
+          </div>
         </div>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Novo Bot
-        </Button>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Bots</CardTitle>
-            <Bot className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4</div>
-            <p className="text-xs text-muted-foreground">3 ativos, 1 pausado</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Mensagens Hoje</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">3.012</div>
-            <p className="text-xs text-muted-foreground">+12% em relação a ontem</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversões</CardTitle>
-            <Zap className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">88</div>
-            <p className="text-xs text-muted-foreground">Taxa de 2.9%</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Performance Média</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">86%</div>
-            <p className="text-xs text-muted-foreground">+3% este mês</p>
-          </CardContent>
-        </Card>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Novo Bot
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Criar Novo Bot</DialogTitle>
+              <DialogDescription>
+                Configure as informações básicas do seu novo bot.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="nome">Nome</Label>
+                <Input
+                  id="nome"
+                  placeholder="Digite o nome do bot"
+                  value={formData.nome}
+                  onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="token">Token</Label>
+                <Input
+                  id="token"
+                  placeholder="Digite o token do bot"
+                  value={formData.token}
+                  onChange={(e) => setFormData(prev => ({ ...prev, token: e.target.value }))}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="funil">Funil</Label>
+                <Select
+                  value={formData.funil}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, funil: value }))}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um funil" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {funis.map((funil) => (
+                      <SelectItem key={funil.id} value={funil.id}>
+                        {funil.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex justify-end gap-2 pt-4">
+                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button type="submit">
+                  Criar Bot
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Bots Cards */}
