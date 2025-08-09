@@ -85,172 +85,81 @@ const FunisPage = () => {
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Funis</CardTitle>
-            <Zap className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4</div>
-            <p className="text-xs text-muted-foreground">3 ativos, 1 pausado</p>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Leads Totais</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">5.862</div>
-            <p className="text-xs text-muted-foreground">+18% este mês</p>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversões</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">532</div>
-            <p className="text-xs text-muted-foreground">Taxa média de 9.1%</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">R$ 134.800</div>
-            <p className="text-xs text-muted-foreground">+25% este mês</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Performance Semanal</CardTitle>
-          <CardDescription>Leads capturados vs conversões nos últimos 7 dias</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-              <YAxis stroke="hsl(var(--muted-foreground))" />
-              <Bar dataKey="leads" fill="hsl(var(--chart-1))" radius={4} />
-              <Bar dataKey="conversions" fill="hsl(var(--chart-2))" radius={4} />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-
-      {/* Funis Table */}
+      {/* Funis Cards */}
       <Card>
         <CardHeader>
           <CardTitle>Seus Funis</CardTitle>
           <CardDescription>Performance detalhada de cada funil de vendas</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Leads</TableHead>
-                <TableHead>Conversões</TableHead>
-                <TableHead>Taxa</TableHead>
-                <TableHead>Receita</TableHead>
-                <TableHead>Atualizado</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {funis.map((funil) => (
-                <TableRow key={funil.id}>
-                  <TableCell className="font-medium">{funil.name}</TableCell>
-                  <TableCell>
-                    <Badge variant={funil.status === 'Ativo' ? 'default' : 'secondary'}>
-                      {funil.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{funil.leads.toLocaleString()}</TableCell>
-                  <TableCell>{funil.conversions}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <Progress value={funil.conversionRate} className="w-[60px] h-2" />
-                      <span className="text-sm text-muted-foreground">{funil.conversionRate}%</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {funis.map((funil) => (
+              <Card key={funil.id} className="relative">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="p-2 rounded-lg bg-primary/10">
+                        <Zap className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-base">{funil.name}</CardTitle>
+                        <Badge variant={funil.status === 'Ativo' ? 'default' : 'secondary'} className="text-xs">
+                          {funil.status}
+                        </Badge>
+                      </div>
                     </div>
-                  </TableCell>
-                  <TableCell className="font-medium">R$ {funil.revenue.toLocaleString()}</TableCell>
-                  <TableCell className="text-muted-foreground">{funil.lastUpdate}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button size="sm" variant="outline">
+                    <div className="flex gap-1">
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
                         {funil.status === 'Ativo' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                       </Button>
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">Leads</p>
+                        <p className="font-semibold">{funil.leads.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Conversões</p>
+                        <p className="font-semibold">{funil.conversions}</p>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-muted-foreground">Taxa de Conversão</span>
+                        <span className="font-medium">{funil.conversionRate}%</span>
+                      </div>
+                      <Progress value={funil.conversionRate} className="h-2" />
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">Receita</span>
+                      <span className="font-medium">R$ {funil.revenue.toLocaleString()}</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>Atualizado</span>
+                      <span>{funil.lastUpdate}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </CardContent>
       </Card>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Templates</CardTitle>
-            <CardDescription>Funis pré-configurados</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full" variant="outline">
-              <Zap className="h-4 w-4 mr-2" />
-              Explorar Templates
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">A/B Testing</CardTitle>
-            <CardDescription>Teste diferentes versões</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full">
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Criar Teste
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Automações</CardTitle>
-            <CardDescription>Configure gatilhos automáticos</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full" variant="secondary">
-              <Settings className="h-4 w-4 mr-2" />
-              Configurar
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   )
 }
