@@ -149,7 +149,7 @@ export function Dashboard() {
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-foreground">📈 Análise de Performance</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
-          <Card className="metric-card bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 bg-purple-900">
+          <Card className="metric-card bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <div className="icon-badge bg-primary/20">
