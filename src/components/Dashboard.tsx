@@ -123,26 +123,28 @@ export function Dashboard() {
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-foreground">📈 Análise de Performance</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
-          <Card className="metric-card">
+          <Card className="metric-card bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-primary" />
+                <div className="icon-badge bg-primary/20">
+                  <BarChart3 className="h-5 w-5 text-primary" />
+                </div>
                 <div>
-                  <CardTitle>Vendas por Mês</CardTitle>
+                  <CardTitle className="text-primary">Vendas por Mês</CardTitle>
                   <CardDescription>Comparativo de vendas e usuários</CardDescription>
                 </div>
               </div>
             </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-                <YAxis stroke="hsl(var(--muted-foreground))" />
-                <Bar dataKey="vendas" fill="hsl(var(--chart-1))" radius={4} />
-                <Bar dataKey="usuarios" fill="hsl(var(--chart-2))" radius={4} />
-              </BarChart>
-            </ResponsiveContainer>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                  <YAxis stroke="hsl(var(--muted-foreground))" />
+                  <Bar dataKey="vendas" fill="hsl(var(--foreground))" radius={4} />
+                  <Bar dataKey="usuarios" fill="hsl(var(--muted-foreground))" radius={4} />
+                </BarChart>
+              </ResponsiveContainer>
           </CardContent>
         </Card>
 
