@@ -82,9 +82,9 @@ export function Dashboard() {
       {/* Metrics Cards */}
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-foreground">📊 Métricas Principais</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="metric-card">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="metric-card card-compact">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div>
                 <CardTitle className="text-sm font-medium text-muted-foreground">Receita Total</CardTitle>
                 <div className="text-2xl font-bold mt-2">R$ 45.231</div>
@@ -98,8 +98,8 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="metric-card">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+          <Card className="metric-card card-compact">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div>
                 <CardTitle className="text-sm font-medium text-muted-foreground">Usuários Ativos</CardTitle>
                 <div className="text-2xl font-bold mt-2">2.350</div>
@@ -113,8 +113,8 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="metric-card">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+          <Card className="metric-card card-compact">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div>
                 <CardTitle className="text-sm font-medium text-muted-foreground">Vendas</CardTitle>
                 <div className="text-2xl font-bold mt-2">12.234</div>
@@ -128,8 +128,8 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="metric-card">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+          <Card className="metric-card card-compact">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div>
                 <CardTitle className="text-sm font-medium text-muted-foreground">Taxa de Conversão</CardTitle>
                 <div className="text-2xl font-bold mt-2">3.2%</div>
