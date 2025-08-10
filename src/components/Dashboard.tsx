@@ -1,45 +1,71 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Progress } from "@/components/ui/progress"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
-import { 
-  DollarSign,
-  Users,
-  ShoppingCart,
-  Activity,
-  Download,
-  Eye,
-  Settings,
-  BarChart3
-} from "lucide-react"
-
-const chartData = [
-  { name: 'Jan', vendas: 4000, usuarios: 2400 },
-  { name: 'Fev', vendas: 3000, usuarios: 1398 },
-  { name: 'Mar', vendas: 2000, usuarios: 9800 },
-  { name: 'Abr', vendas: 2780, usuarios: 3908 },
-  { name: 'Mai', vendas: 1890, usuarios: 4800 },
-  { name: 'Jun', vendas: 2390, usuarios: 3800 },
-]
-
-const pieData = [
-  { name: 'Desktop', value: 45, color: 'hsl(var(--chart-1))' },
-  { name: 'Mobile', value: 35, color: 'hsl(var(--chart-2))' },
-  { name: 'Tablet', value: 20, color: 'hsl(var(--chart-3))' },
-]
-
-const recentUsers = [
-  { name: "Ana Silva", email: "ana@exemplo.com", status: "Ativo", value: "R$ 1.234" },
-  { name: "João Santos", email: "joao@exemplo.com", status: "Pendente", value: "R$ 856" },
-  { name: "Maria Costa", email: "maria@exemplo.com", status: "Ativo", value: "R$ 2.145" },
-  { name: "Pedro Lima", email: "pedro@exemplo.com", status: "Inativo", value: "R$ 642" },
-]
-
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Progress } from "@/components/ui/progress";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { DollarSign, Users, ShoppingCart, Activity, Download, Eye, Settings, BarChart3 } from "lucide-react";
+const chartData = [{
+  name: 'Jan',
+  vendas: 4000,
+  usuarios: 2400
+}, {
+  name: 'Fev',
+  vendas: 3000,
+  usuarios: 1398
+}, {
+  name: 'Mar',
+  vendas: 2000,
+  usuarios: 9800
+}, {
+  name: 'Abr',
+  vendas: 2780,
+  usuarios: 3908
+}, {
+  name: 'Mai',
+  vendas: 1890,
+  usuarios: 4800
+}, {
+  name: 'Jun',
+  vendas: 2390,
+  usuarios: 3800
+}];
+const pieData = [{
+  name: 'Desktop',
+  value: 45,
+  color: 'hsl(var(--chart-1))'
+}, {
+  name: 'Mobile',
+  value: 35,
+  color: 'hsl(var(--chart-2))'
+}, {
+  name: 'Tablet',
+  value: 20,
+  color: 'hsl(var(--chart-3))'
+}];
+const recentUsers = [{
+  name: "Ana Silva",
+  email: "ana@exemplo.com",
+  status: "Ativo",
+  value: "R$ 1.234"
+}, {
+  name: "João Santos",
+  email: "joao@exemplo.com",
+  status: "Pendente",
+  value: "R$ 856"
+}, {
+  name: "Maria Costa",
+  email: "maria@exemplo.com",
+  status: "Ativo",
+  value: "R$ 2.145"
+}, {
+  name: "Pedro Lima",
+  email: "pedro@exemplo.com",
+  status: "Inativo",
+  value: "R$ 642"
+}];
 export function Dashboard() {
-  return (
-    <div className="p-6 space-y-8 animate-fade-in">
+  return <div className="p-6 space-y-8 animate-fade-in">
       {/* Breadcrumb */}
       <div className="breadcrumb-nav">
         <span>Início</span>
@@ -123,7 +149,7 @@ export function Dashboard() {
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-foreground">📈 Análise de Performance</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
-          <Card className="metric-card bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+          <Card className="metric-card bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 bg-purple-900">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <div className="icon-badge bg-primary/20">
@@ -161,19 +187,11 @@ export function Dashboard() {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
+                <Pie data={pieData} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="value" label={({
+                  name,
+                  percent
+                }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                  {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
@@ -207,8 +225,7 @@ export function Dashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentUsers.map((user, index) => (
-                  <TableRow key={index}>
+                {recentUsers.map((user, index) => <TableRow key={index}>
                     <TableCell className="font-medium">{user.name}</TableCell>
                     <TableCell className="text-muted-foreground">{user.email}</TableCell>
                     <TableCell>
@@ -217,8 +234,7 @@ export function Dashboard() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right font-medium">{user.value}</TableCell>
-                  </TableRow>
-                ))}
+                  </TableRow>)}
               </TableBody>
             </Table>
           </CardContent>
@@ -327,6 +343,5 @@ export function Dashboard() {
           </Card>
         </div>
       </section>
-    </div>
-  )
+    </div>;
 }
