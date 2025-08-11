@@ -17,6 +17,8 @@ import {
   BarChart3,
   MessageSquare,
   Zap,
+  Edit,
+  Trash2,
 } from "lucide-react"
 
 const bots = [
@@ -81,13 +83,6 @@ const BotsPage = () => {
   }
   return (
     <div className="p-6 space-y-8 animate-fade-in">
-      {/* Breadcrumb */}
-      <div className="breadcrumb-nav">
-        <span>Início</span>
-        <span>•</span>
-        <span className="text-foreground font-medium">Bots</span>
-      </div>
-
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="section-header">
@@ -163,11 +158,6 @@ const BotsPage = () => {
 
       {/* Bots Section */}
       <section className="space-y-4">
-        <div className="flex items-center gap-2">
-          <Bot className="h-6 w-6 text-primary" />
-          <h2 className="text-xl font-semibold text-foreground">🤖 Seus Assistentes</h2>
-        </div>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
           {bots.map((bot) => (
             <Card key={bot.id} className="metric-card">
@@ -186,6 +176,12 @@ const BotsPage = () => {
                     </div>
                   </div>
                   <div className="flex gap-1">
+                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-destructive/10 text-destructive">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                     <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
                       {bot.status === 'Ativo' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                     </Button>

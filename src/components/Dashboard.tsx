@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { DollarSign, Users, ShoppingCart, Activity, Download, Eye, Settings, BarChart3 } from "lucide-react";
+import { DollarSign, Users, ShoppingCart, Activity, Download, Eye, Settings, BarChart3, ChevronDown } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 const chartData = [{
   name: 'Jan',
   vendas: 4000,
@@ -66,17 +67,25 @@ const recentUsers = [{
 }];
 export function Dashboard() {
   return <div className="p-6 space-y-8 animate-fade-in">
-      {/* Breadcrumb */}
-      <div className="breadcrumb-nav">
-        <span>Início</span>
-        <span>•</span>
-        <span className="text-foreground font-medium">Dashboard</span>
-      </div>
-
       {/* Header */}
-      <div className="section-header">
-        <h1 className="page-title">Dashboard Analytics</h1>
-        <p className="page-subtitle">Visão geral completa das suas métricas e performance</p>
+      <div className="flex items-center justify-between">
+        <div className="section-header">
+          <h1 className="page-title">Dashboard Analytics</h1>
+          <p className="page-subtitle">Visão geral completa das suas métricas e performance</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Select defaultValue="mes">
+            <SelectTrigger className="w-[140px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="dia">Hoje</SelectItem>
+              <SelectItem value="semana">Esta Semana</SelectItem>
+              <SelectItem value="mes">Este Mês</SelectItem>
+              <SelectItem value="ano">Este Ano</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Metrics Cards */}
@@ -156,8 +165,8 @@ export function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
                   <YAxis stroke="hsl(var(--muted-foreground))" />
-                  <Area dataKey="vendas" fill="hsl(var(--foreground))" stroke="hsl(var(--foreground))" strokeWidth={2} />
-                  <Area dataKey="usuarios" fill="hsl(var(--muted-foreground))" stroke="hsl(var(--muted-foreground))" strokeWidth={2} />
+                  <Area dataKey="vendas" fill="hsl(var(--primary))" stroke="hsl(var(--primary))" strokeWidth={2} fillOpacity={0.6} />
+                  <Area dataKey="usuarios" fill="hsl(var(--primary))" stroke="hsl(var(--primary))" strokeWidth={2} fillOpacity={0.3} />
                 </AreaChart>
               </ResponsiveContainer>
             </CardContent>
