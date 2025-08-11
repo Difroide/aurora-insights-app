@@ -146,11 +146,11 @@ export function Dashboard() {
 
       {/* Charts Section */}
       <section className="space-y-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
-          <Card className="metric-card bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+        <div className="grid grid-cols-1 gap-6 animate-fade-in">
+          <Card className="metric-card">
             <CardHeader>
             </CardHeader>
-          <CardContent>
+            <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -160,131 +160,7 @@ export function Dashboard() {
                   <Area dataKey="usuarios" fill="hsl(var(--muted-foreground))" stroke="hsl(var(--muted-foreground))" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-          <Card className="metric-card">
-            <CardHeader>
-            </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie data={pieData} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="value" label={({
-                  name,
-                  percent
-                }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                  {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Activity Section */}
-      <section className="space-y-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2 metric-card">
-            <CardHeader>
-            </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Valor</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentUsers.map((user, index) => <TableRow key={index}>
-                    <TableCell className="font-medium">{user.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{user.email}</TableCell>
-                    <TableCell>
-                      <Badge variant={user.status === 'Ativo' ? 'default' : user.status === 'Pendente' ? 'secondary' : 'destructive'}>
-                        {user.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right font-medium">{user.value}</TableCell>
-                  </TableRow>)}
-              </TableBody>
-            </Table>
-          </CardContent>
-          </Card>
-
-          <Card className="metric-card">
-            <CardHeader>
-            </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Vendas</span>
-                <span>75%</span>
-              </div>
-              <Progress value={75} className="h-2" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Usuários</span>
-                <span>60%</span>
-              </div>
-              <Progress value={60} className="h-2" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Receita</span>
-                <span>85%</span>
-              </div>
-              <Progress value={85} className="h-2" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Conversão</span>
-                <span>45%</span>
-              </div>
-              <Progress value={45} className="h-2" />
-            </div>
-          </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Quick Actions */}
-      <section className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-          <Card className="metric-card">
-            <CardHeader>
-            </CardHeader>
-          <CardContent>
-            <Button className="w-full" variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Baixar Relatório
-            </Button>
-          </CardContent>
-          </Card>
-
-          <Card className="metric-card">
-            <CardHeader>
-            </CardHeader>
-          <CardContent>
-            <Button className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
-              Ver Analytics
-            </Button>
-          </CardContent>
-          </Card>
-
-          <Card className="metric-card">
-            <CardHeader>
-            </CardHeader>
-          <CardContent>
-            <Button className="w-full" variant="secondary">
-              <Settings className="h-4 w-4 mr-2" />
-              Configurar
-            </Button>
-          </CardContent>
+            </CardContent>
           </Card>
         </div>
       </section>
