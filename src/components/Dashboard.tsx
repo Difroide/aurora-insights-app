@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { DollarSign, Users, ShoppingCart, Activity, Download, Eye, Settings, BarChart3, ChevronDown } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 const chartData = [{
@@ -165,6 +165,19 @@ export function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
                   <YAxis stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip 
+                    contentStyle={{
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px',
+                      color: 'hsl(var(--foreground))'
+                    }}
+                    labelStyle={{ color: 'hsl(var(--foreground))' }}
+                    formatter={(value, name) => [
+                      name === 'vendas' ? `${value} vendas` : `${value} usuários`,
+                      name === 'vendas' ? 'Vendas' : 'Usuários'
+                    ]}
+                  />
                   <Area dataKey="vendas" fill="hsl(var(--primary))" stroke="hsl(var(--primary))" strokeWidth={2} fillOpacity={0.6} />
                   <Area dataKey="usuarios" fill="hsl(var(--primary))" stroke="hsl(var(--primary))" strokeWidth={2} fillOpacity={0.3} />
                 </AreaChart>
