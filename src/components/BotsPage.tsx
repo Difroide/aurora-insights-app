@@ -158,73 +158,74 @@ const BotsPage = () => {
 
       {/* Bots Section */}
       <section className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+        <div className="space-y-4 animate-fade-in">
           {bots.map((bot) => (
             <Card key={bot.id} className="metric-card">
-              <CardHeader className="pb-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 flex-1">
                     <div className="icon-badge">
-                      <Bot className="h-5 w-5" />
+                      <Bot className="h-6 w-6" />
                     </div>
-                    <div>
-                      <CardTitle className="text-base font-semibold">{bot.name}</CardTitle>
-                      <div className="status-indicator mt-1">
-                        <div className={`w-2 h-2 rounded-full ${bot.status === 'Ativo' ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                        <span className={bot.status === 'Ativo' ? 'text-green-600' : 'text-gray-500'}>{bot.status}</span>
+                    
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-lg font-semibold">{bot.name}</h3>
+                        <div className="status-indicator">
+                          <div className={`w-2 h-2 rounded-full ${bot.status === 'Ativo' ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                          <span className={`text-sm ${bot.status === 'Ativo' ? 'text-green-600' : 'text-gray-500'}`}>{bot.status}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-4 gap-6 text-sm">
+                        <div className="info-item">
+                          <div className="flex items-center gap-2 mb-1">
+                            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-muted-foreground">Mensagens</span>
+                          </div>
+                          <span className="font-semibold text-lg">{bot.messages.toLocaleString()}</span>
+                        </div>
+                        
+                        <div className="info-item">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Zap className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-muted-foreground">Conversões</span>
+                          </div>
+                          <span className="font-semibold text-lg">{bot.conversions}</span>
+                        </div>
+                        
+                        <div className="info-item">
+                          <div className="flex items-center gap-2 mb-1">
+                            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-muted-foreground">Performance</span>
+                          </div>
+                          <span className="font-semibold text-lg">{bot.performance}%</span>
+                        </div>
+                        
+                        <div className="info-item">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-muted-foreground text-xs">Última atividade</span>
+                          </div>
+                          <span className="text-sm font-medium">{bot.lastActive}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-1">
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
+                  
+                  <div className="flex items-center gap-2 ml-4">
+                    <Button size="sm" variant="ghost" className="h-9 w-9 p-0 hover:bg-primary/10">
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-destructive/10 text-destructive">
+                    <Button size="sm" variant="ghost" className="h-9 w-9 p-0 hover:bg-destructive/10 text-destructive">
                       <Trash2 className="h-4 w-4" />
                     </Button>
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
+                    <Button size="sm" variant="ghost" className="h-9 w-9 p-0 hover:bg-primary/10">
                       {bot.status === 'Ativo' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                     </Button>
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
+                    <Button size="sm" variant="ghost" className="h-9 w-9 p-0 hover:bg-primary/10">
                       <Settings className="h-4 w-4" />
                     </Button>
                   </div>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="pt-0 space-y-4">
-                <div className="info-grid grid-cols-2">
-                  <div className="info-item">
-                    <div className="flex items-center gap-2">
-                      <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Mensagens</span>
-                    </div>
-                    <span className="font-semibold">{bot.messages.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="info-item">
-                    <div className="flex items-center gap-2">
-                      <Zap className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Conversões</span>
-                    </div>
-                    <span className="font-semibold">{bot.conversions}</span>
-                  </div>
-                </div>
-                
-                <div className="divider-section">
-                  <div className="flex justify-between items-center text-sm mb-2">
-                    <span className="text-muted-foreground flex items-center gap-1">
-                      <BarChart3 className="h-4 w-4" />
-                      Performance
-                    </span>
-                    <span className="font-medium">{bot.performance}%</span>
-                  </div>
-                  <Progress value={bot.performance} className="h-2" />
-                </div>
-                
-                <div className="info-item pt-2">
-                  <span className="text-muted-foreground text-xs">Última atividade</span>
-                  <span className="text-xs font-medium">{bot.lastActive}</span>
                 </div>
               </CardContent>
             </Card>
