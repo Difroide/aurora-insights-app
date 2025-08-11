@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { DollarSign, Users, ShoppingCart, Activity, Download, Eye, Settings, BarChart3 } from "lucide-react";
 const chartData = [{
   name: 'Jan',
@@ -81,7 +81,6 @@ export function Dashboard() {
 
       {/* Metrics Cards */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-foreground">📊 Métricas Principais</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="metric-card card-compact">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -147,42 +146,25 @@ export function Dashboard() {
 
       {/* Charts Section */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-foreground">📈 Análise de Performance</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
           <Card className="metric-card bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <div className="icon-badge bg-primary/20">
-                  <BarChart3 className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <CardTitle className="text-primary">Vendas por Mês</CardTitle>
-                  <CardDescription>Comparativo de vendas e usuários</CardDescription>
-                </div>
-              </div>
             </CardHeader>
           <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={chartData}>
+                <AreaChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
                   <YAxis stroke="hsl(var(--muted-foreground))" />
-                  <Bar dataKey="vendas" fill="hsl(var(--foreground))" radius={4} />
-                  <Bar dataKey="usuarios" fill="hsl(var(--muted-foreground))" radius={4} />
-                </BarChart>
+                  <Area dataKey="vendas" fill="hsl(var(--foreground))" stroke="hsl(var(--foreground))" strokeWidth={2} />
+                  <Area dataKey="usuarios" fill="hsl(var(--muted-foreground))" stroke="hsl(var(--muted-foreground))" strokeWidth={2} />
+                </AreaChart>
               </ResponsiveContainer>
           </CardContent>
         </Card>
 
           <Card className="metric-card">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-primary" />
-                <div>
-                  <CardTitle>Dispositivos de Acesso</CardTitle>
-                  <CardDescription>Distribuição por tipo de dispositivo</CardDescription>
-                </div>
-              </div>
             </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -202,17 +184,9 @@ export function Dashboard() {
 
       {/* Activity Section */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-foreground">👥 Atividade Recente</h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2 metric-card">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-primary" />
-                <div>
-                  <CardTitle>Usuários Recentes</CardTitle>
-                  <CardDescription>Lista dos últimos usuários cadastrados</CardDescription>
-                </div>
-              </div>
             </CardHeader>
           <CardContent>
             <Table>
@@ -242,13 +216,6 @@ export function Dashboard() {
 
           <Card className="metric-card">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-primary" />
-                <div>
-                  <CardTitle>Metas do Mês</CardTitle>
-                  <CardDescription>Progresso das principais métricas</CardDescription>
-                </div>
-              </div>
             </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -286,17 +253,9 @@ export function Dashboard() {
 
       {/* Quick Actions */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-foreground">⚡ Ações Rápidas</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
           <Card className="metric-card">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <Download className="h-5 w-5 text-primary" />
-                <div>
-                  <CardTitle className="text-base">Relatórios</CardTitle>
-                  <CardDescription>Gere relatórios detalhados</CardDescription>
-                </div>
-              </div>
             </CardHeader>
           <CardContent>
             <Button className="w-full" variant="outline">
@@ -308,13 +267,6 @@ export function Dashboard() {
 
           <Card className="metric-card">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <Eye className="h-5 w-5 text-primary" />
-                <div>
-                  <CardTitle className="text-base">Analytics</CardTitle>
-                  <CardDescription>Veja métricas avançadas</CardDescription>
-                </div>
-              </div>
             </CardHeader>
           <CardContent>
             <Button className="w-full">
@@ -326,13 +278,6 @@ export function Dashboard() {
 
           <Card className="metric-card">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <Settings className="h-5 w-5 text-primary" />
-                <div>
-                  <CardTitle className="text-base">Configurações</CardTitle>
-                  <CardDescription>Ajuste suas preferências</CardDescription>
-                </div>
-              </div>
             </CardHeader>
           <CardContent>
             <Button className="w-full" variant="secondary">
