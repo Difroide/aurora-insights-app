@@ -12,6 +12,10 @@ export default defineConfig(({ mode }) => ({
   preview: {
     host: "0.0.0.0",
     port: 4173,
+    allowedHosts: [
+      "aurora-insights-app-production.up.railway.app",
+      ".up.railway.app"
+    ],
   },
   plugins: [
     react(),
