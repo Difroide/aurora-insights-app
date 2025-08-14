@@ -90,17 +90,16 @@ cp config.example.env .env.local
 
 Edite o arquivo `.env.local` com suas credenciais:
 ```env
-# Configurações da API PushinPay
-VITE_PIX_API_TOKEN=seu_token_pushinpay_aqui
-
-# Configurações do Supabase
+# Configurações do Supabase (obrigatórias)
 VITE_SUPABASE_URL=sua_url_do_supabase_aqui
 VITE_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase_aqui
 
-# Outras configurações
+# Outras configurações (opcionais)
 VITE_APP_NAME=Aurora Insights
 VITE_APP_VERSION=1.0.0
 ```
+
+**Nota**: O token da PushinPay é configurado individualmente por cada usuário nas configurações da aplicação.
 
 ### 5. Execute o projeto
 ```bash

@@ -27,17 +27,16 @@ Guia completo para fazer deploy da aplicação Aurora Insights no Railway.
 Após o deploy inicial, vá em **"Variables"** e adicione:
 
 ```env
-# Configurações da API PushinPay
-VITE_PIX_API_TOKEN=seu_token_pushinpay_aqui
+# Configurações do Supabase (obrigatórias)
+VITE_SUPABASE_URL=https://hllycihdvkcvhxjssevd.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
-# Configurações do Supabase
-VITE_SUPABASE_URL=sua_url_do_supabase_aqui
-VITE_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase_aqui
-
-# Outras configurações
+# Outras configurações (opcionais)
 VITE_APP_NAME=Aurora Insights
 VITE_APP_VERSION=1.0.0
 ```
+
+**Nota**: Não é necessário configurar o token da PushinPay aqui, pois cada usuário configura seu próprio token nas configurações da aplicação.
 
 ### 4. Configure o Domínio
 
