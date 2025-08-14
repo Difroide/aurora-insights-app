@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 4173
 
 # Start the app
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"] 
+CMD ["npm", "run", "preview"] 
