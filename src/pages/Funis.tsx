@@ -1,12 +1,9 @@
 import FunisPage from "@/components/FunisPage";
-import { AppLayout } from "@/components/AppLayout";
 
-const Funis = () => {
+export default function Funis() {
   return (
-    <AppLayout>
+    <div className="p-6">
       <FunisPage />
-    </AppLayout>
+    </div>
   );
-};
-
-export default Funis;
+}

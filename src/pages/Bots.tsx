@@ -1,12 +1,9 @@
 import BotsPage from "@/components/BotsPage";
-import { AppLayout } from "@/components/AppLayout";
 
-const Bots = () => {
+export default function Bots() {
   return (
-    <AppLayout>
+    <div className="p-6">
       <BotsPage />
-    </AppLayout>
+    </div>
   );
-};
-
-export default Bots;
+}
