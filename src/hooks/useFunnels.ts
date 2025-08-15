@@ -59,7 +59,7 @@ export const useFunnels = () => {
       const data = await supabase.getFunnels();
       
       // Converter dados do Supabase para o formato local
-      const funnelsWithDates = data.map((funnel) => ({
+      const funnelsWithDates = (data || []).map((funnel) => ({
         id: funnel.id,
         name: funnel.name,
         mediaUrl: funnel.media_url || undefined,

@@ -32,7 +32,7 @@ export const useBots = () => {
       const data = await supabase.getBots();
       
       // Converter dados do Supabase para o formato local
-      const botsWithDates = data.map((bot) => ({
+      const botsWithDates = (data || []).map((bot) => ({
         id: bot.id,
         name: bot.name,
         token: bot.token,

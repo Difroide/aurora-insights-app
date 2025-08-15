@@ -43,7 +43,7 @@ export const useAnalytics = () => {
     if (funnelsLoading || telegramLoading) return null;
     
     // Se não há dados, retornar estrutura vazia mas válida
-    if (!funnels || funnels.length === 0) {
+    if (!funnels || !Array.isArray(funnels) || funnels.length === 0) {
       return {
         // Métricas principais
         totalRevenue: 0,
@@ -73,12 +73,12 @@ export const useAnalytics = () => {
     }
 
     // Calcular métricas básicas
-    const totalFunnels = funnels.length;
-    const totalButtons = funnels.reduce((acc, funnel) => acc + funnel.inlineButtons.length, 0);
+    const totalFunnels = (funnels || []).length;
+    const totalButtons = (funnels || []).reduce((acc, funnel) => acc + (funnel.inlineButtons || []).length, 0);
     
     // Calcular receita total (simulado baseado nos valores dos botões)
-    const totalRevenue = funnels.reduce((acc, funnel) => {
-      return acc + funnel.inlineButtons.reduce((buttonAcc, button) => {
+    const totalRevenue = (funnels || []).reduce((acc, funnel) => {
+      return acc + (funnel.inlineButtons || []).reduce((buttonAcc, button) => {
         const valueMatch = button.value.match(/(\d+[.,]\d+|\d+)/);
         const value = valueMatch ? parseFloat(valueMatch[1].replace(',', '.')) : 0;
         return buttonAcc + value;
@@ -86,15 +86,15 @@ export const useAnalytics = () => {
     }, 0);
 
     // Calcular transações (simulado - 1 por botão com PIX)
-    const totalTransactions = funnels.reduce((acc, funnel) => {
-      return acc + funnel.inlineButtons.filter(button => button.generatePIX).length;
+    const totalTransactions = (funnels || []).reduce((acc, funnel) => {
+      return acc + (funnel.inlineButtons || []).filter(button => button.generatePIX).length;
     }, 0);
 
     // Calcular taxa de conversão (simulado)
     const conversionRate = totalButtons > 0 ? (totalTransactions / totalButtons) * 100 : 0;
 
     // Dados de performance dos funis
-    const funnelPerformance = funnels.map(funnel => {
+    const funnelPerformance = (funnels || []).map(funnel => {
       const buttonClicks = funnel.inlineButtons.length; // Simulado
       const conversions = funnel.inlineButtons.filter(button => button.generatePIX).length;
       const revenue = funnel.inlineButtons.reduce((acc, button) => {
@@ -112,7 +112,7 @@ export const useAnalytics = () => {
     });
 
     // Dados de atividade dos bots (simulado)
-    const botActivity = funnels.map(funnel => ({
+    const botActivity = (funnels || []).map(funnel => ({
       name: `Bot do ${funnel.name}`,
       messages: Math.floor(Math.random() * 100) + 10, // Simulado
       active: true
@@ -132,8 +132,8 @@ export const useAnalytics = () => {
       .slice(0, 5);
 
     // Top botões
-    const topButtons = funnels.flatMap(funnel => 
-      funnel.inlineButtons.map(button => ({
+    const topButtons = (funnels || []).flatMap(funnel => 
+      (funnel.inlineButtons || []).map(button => ({
         name: button.name,
         clicks: Math.floor(Math.random() * 50) + 5, // Simulado
         revenue: (() => {
@@ -144,8 +144,8 @@ export const useAnalytics = () => {
     ).sort((a, b) => b.revenue - a.revenue).slice(0, 10);
 
     // Transações recentes (simulado)
-    const recentTransactions = funnels.flatMap(funnel =>
-      funnel.inlineButtons
+    const recentTransactions = (funnels || []).flatMap(funnel =>
+      (funnel.inlineButtons || [])
         .filter(button => button.generatePIX)
         .map(button => ({
           id: `tx_${funnel.id}_${button.id}`,
