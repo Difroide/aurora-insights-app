@@ -455,14 +455,19 @@ class TelegramService {
       
       console.log(`Valor total com orderbump: ${totalValue} (${buttonValue} + ${orderbumpValue})`);
       
+      // Criar botão temporário com valor total para gerar PIX
+      const totalButton = {
+        ...button,
+        value: this.formatCurrency(totalValue),
+        name: `${button.name} + ${orderbump.title}`,
+        generatePIX: true
+      };
+      
       // Gerar PIX com valor total
-      const pixData = await paymentService.generatePIX(totalValue, `${button.name} + ${orderbump.title}`);
+      const pixData = await paymentService.generatePIX(totalValue, totalButton.name);
       
-      // Enviar PIX
-      await this.sendPIXMessage(ctx, { ...button, pixData }, funnelId);
-      
-      // Enviar mensagem de confirmação do orderbump
-      await ctx.reply(`✅ **Oferta Aceita!**\n\nVocê adicionou: **${orderbump.title}**\nValor adicional: **${orderbump.value}**\n\nTotal: **${this.formatCurrency(totalValue)}**`);
+      // Enviar PIX com valor total
+      await this.sendPIXMessage(ctx, { ...totalButton, pixData }, funnelId);
       
     } catch (error) {
       console.error('Erro ao processar aceitação do orderbump:', error);
