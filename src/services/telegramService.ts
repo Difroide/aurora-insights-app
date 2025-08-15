@@ -194,7 +194,11 @@ class TelegramService {
         telegram_last_name: ctx.chat.last_name || null,
         bot_id: botId,
         funnel_id: funnelId,
-        user_id: user.id
+        user_id: user.id,
+        started_at: new Date().toISOString(),
+        last_interaction: new Date().toISOString(),
+        total_interactions: 1,
+        is_active: true
       };
 
       console.log('Tentando salvar usuário do Telegram:', {
@@ -218,7 +222,20 @@ class TelegramService {
           console.error('Erro ao salvar usuário do Telegram:', error);
           console.error('Código do erro:', error.code);
           console.error('Mensagem do erro:', error.message);
+          console.error('Detalhes do erro:', error.details);
+          console.error('Hint do erro:', error.hint);
           console.error('Dados que causaram erro:', telegramUser);
+          
+          // Tentar verificar se a tabela existe
+          const { error: tableError } = await supabase
+            .from('telegram_users')
+            .select('id')
+            .limit(1);
+          
+          if (tableError) {
+            console.error('Erro ao verificar tabela telegram_users:', tableError);
+            console.error('A tabela telegram_users pode não existir no Supabase!');
+          }
         }
       } else {
         console.log(`Novo usuário salvo: ${ctx.chat.id} no bot ${botId}`);

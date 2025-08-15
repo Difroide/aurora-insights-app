@@ -29,6 +29,15 @@ import { useToast } from "@/hooks/use-toast"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import telegramService from "@/services/telegramService"
 
+// Função para gerar UUID válido
+const generateUUID = (): string => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+
 const BotsPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [formData, setFormData] = useState({
@@ -72,9 +81,12 @@ const BotsPage = () => {
     setIsLoading(true);
 
     try {
+      // Gerar UUID válido para o bot
+      const botId = generateUUID();
+      
       // Inicializar bot no serviço do Telegram
       const botInitialized = await telegramService.initializeBot(
-        Date.now().toString(),
+        botId,
         formData.token,
         formData.nome,
         formData.funil
