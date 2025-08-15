@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Temporariamente hardcoded para resolver o problema do Railway
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://hllycihdvkcvhxjssevd.supabase.co'
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsbHljaWhkdmtjdmh4anNzZXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNzc2MzMsImV4cCI6MjA3MDY1MzYzM30.YxvgwgWXUFhzvVBcFoHmdDCdfUjFDr85-uEB1S_3eNk'
 
 // Debug: Log das variáveis (remover depois)
 console.log('🔍 Debug Supabase:', {
@@ -14,7 +15,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
     url: supabaseUrl,
     key: supabaseAnonKey
   })
-  throw new Error('Missing Supabase environment variables')
+  console.warn('⚠️ Usando valores padrão do Supabase')
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
