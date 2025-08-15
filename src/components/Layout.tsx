@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Home, Filter, Bot, Settings, Menu, LogOut, ChevronLeft, ChevronRight, User, Wifi, WifiOff } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
@@ -104,21 +105,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           )}
           
-          <Button 
-            onClick={handleSignOut} 
-            variant="outline" 
-            size="sm" 
-            className={cn("w-full", sidebarCollapsed ? "h-8 w-8 p-0" : "")}
-          >
-            {sidebarCollapsed ? (
-              <LogOut className="h-4 w-4" />
-            ) : (
-              <>
-                <LogOut className="h-4 w-4 mr-2" />
-                Sair
-              </>
-            )}
-          </Button>
+          <div className={cn("flex gap-2", sidebarCollapsed ? "flex-col" : "")}>
+            <ThemeToggle />
+            <Button 
+              onClick={handleSignOut} 
+              variant="outline" 
+              size="sm" 
+              className={cn("flex-1", sidebarCollapsed ? "h-8 w-8 p-0" : "")}
+            >
+              {sidebarCollapsed ? (
+                <LogOut className="h-4 w-4" />
+              ) : (
+                <>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sair
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
 
