@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, X, Upload, Save, CreditCard, QrCode, Gift, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useFunnels, Funnel } from "@/hooks/useFunnels";
@@ -26,7 +27,24 @@ interface Upsell {
   id: string;
   mediaUrl?: string;
   description: string;
+  delayMinutes: number;
   inlineButtons: UpsellButton[];
+}
+
+interface Downsell {
+  id: string;
+  mediaUrl?: string;
+  description: string;
+  delayMinutes: number;
+  inlineButtons: DownsellButton[];
+}
+
+interface DownsellButton {
+  id: string;
+  name: string;
+  value: string;
+  link: string;
+  orderbump?: Orderbump;
 }
 
 interface UpsellButton {
@@ -60,11 +78,13 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
   const [welcomeMessage, setWelcomeMessage] = useState("");
   const [inlineButtons, setInlineButtons] = useState<InlineButton[]>([]);
   const [upsells, setUpsells] = useState<Upsell[]>([]);
+  const [downsells, setDownsells] = useState<Downsell[]>([]);
   const [isGeneratingPIX, setIsGeneratingPIX] = useState(false);
   const [isConfigured, setIsConfigured] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isOrderbumpUploading, setIsOrderbumpUploading] = useState(false);
   const [isUpsellUploading, setIsUpsellUploading] = useState(false);
+  const [isDownsellUploading, setIsDownsellUploading] = useState(false);
   
   // Estados do modal de orderbump
   const [orderbumpModalOpen, setOrderbumpModalOpen] = useState(false);
@@ -86,10 +106,23 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
   const [upsellData, setUpsellData] = useState<Upsell>({
     id: "",
     description: "",
+    delayMinutes: 0,
     inlineButtons: []
   });
   const [upsellMediaFile, setUpsellMediaFile] = useState<File | null>(null);
   const [upsellMediaUrl, setUpsellMediaUrl] = useState("");
+  
+  // Estados do modal de downsell
+  const [downsellModalOpen, setDownsellModalOpen] = useState(false);
+  const [currentDownsellId, setCurrentDownsellId] = useState<string>("");
+  const [downsellData, setDownsellData] = useState<Downsell>({
+    id: "",
+    description: "",
+    delayMinutes: 0,
+    inlineButtons: []
+  });
+  const [downsellMediaFile, setDownsellMediaFile] = useState<File | null>(null);
+  const [downsellMediaUrl, setDownsellMediaUrl] = useState("");
   
   const { toast } = useToast();
   const { addFunnel } = useFunnels();
@@ -259,9 +292,11 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
       mediaUrl: orderbumpMediaUrl || undefined
     };
 
-    // Verificar se é um botão de upsell ou botão inline normal
+    // Verificar se é um botão de upsell, downsell ou botão inline normal
     if (upsellModalOpen) {
       updateUpsellButton(currentButtonId, 'orderbump', orderbump);
+    } else if (downsellModalOpen) {
+      updateDownsellButton(currentButtonId, 'orderbump', orderbump);
     } else {
       updateInlineButton(currentButtonId, 'orderbump', orderbump);
     }
@@ -288,6 +323,7 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
     const newUpsell: Upsell = {
       id: Date.now().toString(),
       description: "",
+      delayMinutes: 0,
       inlineButtons: []
     };
     setUpsells([...upsells, newUpsell]);
@@ -310,6 +346,7 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
       setUpsellData({
         id: upsellId,
         description: "",
+        delayMinutes: 0,
         inlineButtons: []
       });
       setUpsellMediaUrl("");
@@ -411,9 +448,160 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
     });
   };
 
+  // Funções para gerenciar downsells
+  const addDownsell = () => {
+    const newDownsell: Downsell = {
+      id: Date.now().toString(),
+      description: "",
+      delayMinutes: 0,
+      inlineButtons: []
+    };
+    setDownsells([...downsells, newDownsell]);
+  };
+
+  const removeDownsell = (downsellId: string) => {
+    setDownsells(downsells => downsells.filter(downsell => downsell.id !== downsellId));
+    toast({
+      title: "Downsell removido",
+      description: "Downsell foi removido com sucesso",
+    });
+  };
+
+  const openDownsellModal = (downsellId: string) => {
+    const downsell = downsells.find(d => d.id === downsellId);
+    if (downsell) {
+      setDownsellData(downsell);
+      setDownsellMediaUrl(downsell.mediaUrl || "");
+    } else {
+      setDownsellData({
+        id: downsellId,
+        description: "",
+        delayMinutes: 0,
+        inlineButtons: []
+      });
+      setDownsellMediaUrl("");
+    }
+    setCurrentDownsellId(downsellId);
+    setDownsellModalOpen(true);
+  };
+
+  const handleDownsellFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setDownsellMediaFile(file);
+      setIsDownsellUploading(true);
+      
+      try {
+        const { data, error } = await supabase.storage
+          .from('media')
+          .upload(`downsell_${Date.now()}_${file.name}`, file);
+
+        if (error) {
+          throw error;
+        }
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('media')
+          .getPublicUrl(`${data.path}`);
+
+        setDownsellMediaUrl(publicUrl || "");
+        toast({
+          title: "Upload bem-sucedido",
+          description: `Arquivo "${file.name}" carregado com sucesso.`,
+        });
+      } catch (error) {
+        console.error('Erro ao fazer upload de mídia do downsell:', error);
+        toast({
+          title: "Erro de Upload",
+          description: error instanceof Error ? error.message : "Erro desconhecido ao fazer upload.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsDownsellUploading(false);
+      }
+    }
+  };
+
+  const addDownsellButton = () => {
+    const newButton: DownsellButton = {
+      id: Date.now().toString(),
+      name: "",
+      value: "",
+      link: ""
+    };
+    setDownsellData({
+      ...downsellData,
+      inlineButtons: [...downsellData.inlineButtons, newButton]
+    });
+  };
+
+  const updateDownsellButton = (buttonId: string, field: keyof DownsellButton, value: string | Orderbump | undefined) => {
+    setDownsellData({
+      ...downsellData,
+      inlineButtons: downsellData.inlineButtons.map(btn =>
+        btn.id === buttonId ? { ...btn, [field]: value } : btn
+      )
+    });
+  };
+
+  const removeDownsellButton = (buttonId: string) => {
+    setDownsellData({
+      ...downsellData,
+      inlineButtons: downsellData.inlineButtons.filter(btn => btn.id !== buttonId)
+    });
+  };
+
+  const saveDownsell = () => {
+    if (!downsellData.description.trim()) {
+      toast({
+        title: "Erro",
+        description: "Descrição do downsell é obrigatória",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const downsell: Downsell = {
+      ...downsellData,
+      mediaUrl: downsellMediaUrl || undefined
+    };
+
+    setDownsells(downsells => 
+      downsells.map(d => d.id === currentDownsellId ? downsell : d)
+    );
+    
+    setDownsellModalOpen(false);
+    
+    toast({
+      title: "Sucesso",
+      description: "Downsell configurado com sucesso!",
+    });
+  };
+
   // Função para abrir modal de orderbump para botões do upsell
   const openUpsellOrderbumpModal = (buttonId: string) => {
     const button = upsellData.inlineButtons.find(btn => btn.id === buttonId);
+    if (button?.orderbump) {
+      setOrderbumpData(button.orderbump);
+      setOrderbumpMediaUrl(button.orderbump.mediaUrl || "");
+    } else {
+      setOrderbumpData({
+        id: Date.now().toString(),
+        title: "",
+        acceptText: "Sim, quero aproveitar!",
+        rejectText: "Não, obrigado",
+        value: "",
+        messageAfterPayment: ""
+      });
+      setOrderbumpMediaUrl("");
+    }
+    setCurrentButtonId(buttonId);
+    setOrderbumpModalOpen(true);
+  };
+
+  // Função para abrir modal de orderbump para botões do downsell
+  const openDownsellOrderbumpModal = (buttonId: string) => {
+    const button = downsellData.inlineButtons.find(btn => btn.id === buttonId);
     if (button?.orderbump) {
       setOrderbumpData(button.orderbump);
       setOrderbumpMediaUrl(button.orderbump.mediaUrl || "");
@@ -520,6 +708,7 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
       setWelcomeMessage("");
       setInlineButtons([]);
       setUpsells([]);
+      setDownsells([]);
       
       setOpen(false);
       
@@ -544,6 +733,7 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
     setWelcomeMessage("");
     setInlineButtons([]);
     setUpsells([]);
+    setDownsells([]);
     setOpen(false);
   };
 
@@ -553,6 +743,19 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
     if (isNaN(numValue)) return value;
     return `R$ ${numValue.toFixed(2).replace('.', ',')}`;
   };
+
+  // Opções de tempo para delay
+  const delayOptions = [
+    { value: 0, label: "Imediato" },
+    { value: 3, label: "3 minutos" },
+    { value: 5, label: "5 minutos" },
+    { value: 7, label: "7 minutos" },
+    { value: 10, label: "10 minutos" },
+    { value: 15, label: "15 minutos" },
+    { value: 20, label: "20 minutos" },
+    { value: 25, label: "25 minutos" },
+    { value: 30, label: "30 minutos" }
+  ];
 
   return (
     <>
@@ -845,6 +1048,11 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
                       <div className="bg-muted p-3 rounded-lg">
                         <p className="text-sm font-medium">Descrição:</p>
                         <p className="text-sm text-muted-foreground">{upsell.description}</p>
+                        {upsell.delayMinutes !== undefined && (
+                          <p className="text-xs text-orange-600 mt-1">
+                            ⏱️ Envio: {delayOptions.find(opt => opt.value === upsell.delayMinutes)?.label}
+                          </p>
+                        )}
                         {upsell.mediaUrl && (
                           <p className="text-xs text-green-600 mt-2">✅ Mídia anexada</p>
                         )}
@@ -856,6 +1064,82 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
                       </div>
                     ) : (
                       <p className="text-sm text-muted-foreground">Clique em "Configurar" para definir este upsell</p>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Seção de Downsells */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label>Downsells</Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addDownsell}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Adicionar Downsell
+                </Button>
+              </div>
+
+              {downsells.length === 0 && (
+                <div className="text-center text-muted-foreground py-8 border border-dashed border-border rounded-lg">
+                  <p>Nenhum downsell configurado</p>
+                  <p className="text-sm">Clique em "Adicionar Downsell" para começar</p>
+                </div>
+              )}
+
+              {downsells.map((downsell, index) => (
+                <Card key={downsell.id}>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center justify-between">
+                      Downsell {index + 1}
+                      <div className="flex items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openDownsellModal(downsell.id)}
+                        >
+                          <Gift className="h-4 w-4 mr-2" />
+                          Configurar
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeDownsell(downsell.id)}
+                          className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {downsell.description ? (
+                      <div className="bg-muted p-3 rounded-lg">
+                        <p className="text-sm font-medium">Descrição:</p>
+                        <p className="text-sm text-muted-foreground">{downsell.description}</p>
+                        {downsell.delayMinutes !== undefined && (
+                          <p className="text-xs text-orange-600 mt-1">
+                            ⏱️ Envio: {delayOptions.find(opt => opt.value === downsell.delayMinutes)?.label}
+                          </p>
+                        )}
+                        {downsell.mediaUrl && (
+                          <p className="text-xs text-green-600 mt-2">✅ Mídia anexada</p>
+                        )}
+                        {downsell.inlineButtons.length > 0 && (
+                          <p className="text-xs text-blue-600 mt-1">
+                            {downsell.inlineButtons.length} botão(ões) configurado(s)
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">Clique em "Configurar" para definir este downsell</p>
                     )}
                   </CardContent>
                 </Card>
@@ -1031,6 +1315,26 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
           </DialogHeader>
 
           <div className="space-y-6 py-4">
+            {/* Tempo de Envio do Upsell */}
+            <div className="space-y-2">
+              <Label htmlFor="upsell-delay">Tempo após pagamento confirmado para envio</Label>
+              <Select 
+                value={upsellData.delayMinutes.toString()} 
+                onValueChange={(value) => setUpsellData({...upsellData, delayMinutes: parseInt(value)})}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o tempo de envio" />
+                </SelectTrigger>
+                <SelectContent>
+                  {delayOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value.toString()}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Upload de Mídia do Upsell */}
             <div className="space-y-2">
               <Label>Mídia do Upsell (opcional)</Label>
@@ -1211,6 +1515,222 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
             <Button onClick={saveUpsell} className="btn-gradient">
               <Save className="h-4 w-4 mr-2" />
               Salvar Upsell
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Downsell */}
+      <Dialog open={downsellModalOpen} onOpenChange={setDownsellModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Configurar Downsell</DialogTitle>
+            <DialogDescription>
+              Configure uma oferta de recuperação com mídia, descrição e botões inline
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            {/* Tempo de Envio do Downsell */}
+            <div className="space-y-2">
+              <Label htmlFor="downsell-delay">Tempo após pagamento confirmado para envio</Label>
+              <Select 
+                value={downsellData.delayMinutes.toString()} 
+                onValueChange={(value) => setDownsellData({...downsellData, delayMinutes: parseInt(value)})}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o tempo de envio" />
+                </SelectTrigger>
+                <SelectContent>
+                  {delayOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value.toString()}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Upload de Mídia do Downsell */}
+            <div className="space-y-2">
+              <Label>Mídia do Downsell (opcional)</Label>
+              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
+                {isDownsellUploading ? (
+                  <div className="space-y-2">
+                    <Loader2 className="h-8 w-8 mx-auto animate-spin text-primary" />
+                    <p className="text-sm text-muted-foreground">Fazendo upload...</p>
+                  </div>
+                ) : downsellMediaUrl ? (
+                  <div className="space-y-2">
+                    <div className="max-w-xs mx-auto">
+                      {downsellMediaFile?.type.startsWith('image/') ? (
+                        <img src={downsellMediaUrl} alt="Preview" className="w-full h-auto rounded" />
+                      ) : (
+                        <div className="bg-muted p-4 rounded">
+                          <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
+                          <p className="text-sm text-muted-foreground mt-2">{downsellMediaFile?.name}</p>
+                        </div>
+                      )}
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setDownsellMediaFile(null);
+                        setDownsellMediaUrl("");
+                      }}
+                    >
+                      <X className="h-4 w-4 mr-2" />
+                      Remover
+                    </Button>
+                    <p className="text-xs text-green-600">
+                      ✅ Arquivo enviado com sucesso!
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Clique para fazer upload ou arraste o arquivo
+                    </p>
+                    <Input
+                      type="file"
+                      accept="image/*,video/*"
+                      onChange={handleDownsellFileUpload}
+                      className="hidden"
+                      id="downsell-media-upload"
+                    />
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="cursor-pointer"
+                      onClick={() => document.getElementById('downsell-media-upload')?.click()}
+                    >
+                      Escolher Arquivo
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Descrição do Downsell */}
+            <div className="space-y-2">
+              <Label htmlFor="downsell-description">Descrição do Downsell *</Label>
+              <Textarea
+                id="downsell-description"
+                placeholder="Digite a descrição do seu downsell..."
+                value={downsellData.description}
+                onChange={(e) => setDownsellData({...downsellData, description: e.target.value})}
+                rows={4}
+              />
+            </div>
+
+            {/* Botões Inline do Downsell */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label>Botões Inline do Downsell</Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addDownsellButton}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Adicionar Botão
+                </Button>
+              </div>
+
+              {downsellData.inlineButtons.length === 0 && (
+                <div className="text-center text-muted-foreground py-8 border border-dashed border-border rounded-lg">
+                  <p>Nenhum botão configurado</p>
+                  <p className="text-sm">Clique em "Adicionar Botão" para começar</p>
+                </div>
+              )}
+
+              {downsellData.inlineButtons.map((button, index) => (
+                <Card key={button.id}>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center justify-between">
+                      Botão {index + 1}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeDownsellButton(button.id)}
+                        className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="space-y-2">
+                        <Label htmlFor={`downsell-btn-name-${button.id}`}>Nome</Label>
+                        <Input
+                          id={`downsell-btn-name-${button.id}`}
+                          placeholder="Ex: Comprar Agora"
+                          value={button.name}
+                          onChange={(e) => updateDownsellButton(button.id, 'name', e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor={`downsell-btn-value-${button.id}`}>Valor</Label>
+                        <Input
+                          id={`downsell-btn-value-${button.id}`}
+                          placeholder="Ex: 47,00 ou R$ 47,00"
+                          value={button.value}
+                          onChange={(e) => updateDownsellButton(button.id, 'value', e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor={`downsell-btn-link-${button.id}`}>Link</Label>
+                        <Input
+                          id={`downsell-btn-link-${button.id}`}
+                          placeholder="https://..."
+                          value={button.link}
+                          onChange={(e) => updateDownsellButton(button.id, 'link', e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Botão Orderbump para Downsell */}
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant={button.orderbump ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => openDownsellOrderbumpModal(button.id)}
+                        className="flex items-center gap-2"
+                      >
+                        <Gift className="h-4 w-4" />
+                        {button.orderbump ? "Orderbump Configurado" : "Configurar Orderbump"}
+                      </Button>
+                      {button.orderbump && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => updateDownsellButton(button.id, 'orderbump', undefined)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDownsellModalOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={saveDownsell} className="btn-gradient">
+              <Save className="h-4 w-4 mr-2" />
+              Salvar Downsell
             </Button>
           </DialogFooter>
         </DialogContent>
