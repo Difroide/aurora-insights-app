@@ -13,11 +13,11 @@ import {
   BarChart3,
   Users,
   TrendingUp,
-  Eye,
   Edit,
   Trash2,
   MessageSquare,
-  Link
+  Link,
+  Copy
 } from "lucide-react"
 import { CreateFunnelModal } from "./CreateFunnelModal"
 import { useFunnels, Funnel } from "@/hooks/useFunnels"
@@ -35,7 +35,7 @@ const chartData = [
 ]
 
 const FunisPage = () => {
-  const { funnels, loading, removeFunnel } = useFunnels();
+  const { funnels, loading, removeFunnel, addFunnel } = useFunnels();
   const { toast } = useToast();
 
   const handleSaveFunnel = (funnel: Funnel) => {
@@ -53,6 +53,35 @@ const FunisPage = () => {
       title: "Funil removido",
       description: `O funil "${funnelName}" foi removido com sucesso.`,
     });
+  };
+
+  const handleDuplicateFunnel = async (funnel: Funnel) => {
+    try {
+      const duplicatedFunnel = await addFunnel({
+        name: `${funnel.name} (Cópia)`,
+        mediaUrl: funnel.mediaUrl,
+        welcomeMessage: funnel.welcomeMessage,
+        inlineButtons: funnel.inlineButtons.map(btn => ({
+          ...btn,
+          id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+          // Limpar dados PIX para evitar conflitos
+          generatePIX: false,
+          pixData: undefined
+        }))
+      });
+
+      toast({
+        title: "Funil duplicado",
+        description: `O funil "${duplicatedFunnel.name}" foi criado com sucesso.`,
+      });
+    } catch (error) {
+      console.error('Erro ao duplicar funil:', error);
+      toast({
+        title: "Erro",
+        description: "Erro ao duplicar funil. Tente novamente.",
+        variant: "destructive"
+      });
+    }
   };
 
   const formatDate = (date: Date) => {
@@ -196,11 +225,23 @@ const FunisPage = () => {
                         </div>
                         
                         <div className="flex items-center gap-1">
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
-                            <Edit className="h-4 w-4 text-white" />
-                          </Button>
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
-                            <Eye className="h-4 w-4 text-white" />
+                          <CreateFunnelModal
+                            editFunnel={funnel}
+                            mode="edit"
+                            onSave={handleSaveFunnel}
+                            trigger={
+                              <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
+                                <Edit className="h-4 w-4 text-white" />
+                              </Button>
+                            }
+                          />
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="h-8 w-8 p-0 hover:bg-primary/10"
+                            onClick={() => handleDuplicateFunnel(funnel)}
+                          >
+                            <Copy className="h-4 w-4 text-white" />
                           </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>

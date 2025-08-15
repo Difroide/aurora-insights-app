@@ -68,9 +68,11 @@ interface InlineButton {
 interface CreateFunnelModalProps {
   onSave: (funnel: Funnel) => void | Promise<void>;
   trigger?: React.ReactNode;
+  editFunnel?: Funnel;
+  mode?: 'create' | 'edit';
 }
 
-export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) => {
+export const CreateFunnelModal = ({ onSave, trigger, editFunnel, mode = 'create' }: CreateFunnelModalProps) => {
   const [open, setOpen] = useState(false);
   const [funnelName, setFunnelName] = useState("");
   const [mediaFile, setMediaFile] = useState<File | null>(null);
@@ -125,7 +127,7 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
   const [downsellMediaUrl, setDownsellMediaUrl] = useState("");
   
   const { toast } = useToast();
-  const { addFunnel } = useFunnels();
+  const { addFunnel, updateFunnel } = useFunnels();
 
   // Verificar se a API está configurada
   useEffect(() => {
@@ -141,6 +143,20 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
     
     checkConfig();
   }, []);
+
+  // Popular campos quando estiver editando
+  useEffect(() => {
+    if (mode === 'edit' && editFunnel && open) {
+      setFunnelName(editFunnel.name);
+      setWelcomeMessage(editFunnel.welcomeMessage);
+      setMediaUrl(editFunnel.mediaUrl || "");
+      setInlineButtons(editFunnel.inlineButtons || []);
+      // Por enquanto, definindo upsells e downsells como arrays vazios
+      // Quando implementarmos no backend, estes dados virão do funil
+      setUpsells([]);
+      setDownsells([]);
+    }
+  }, [mode, editFunnel, open]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -692,14 +708,47 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
     }
 
     try {
-      const newFunnel = await addFunnel({
-        name: funnelName,
-        mediaUrl: mediaUrl || undefined,
-        welcomeMessage,
-        inlineButtons: inlineButtons.filter(btn => btn.name && btn.value)
-      });
+      if (mode === 'edit' && editFunnel) {
+        // Modo de edição
+        await updateFunnel(editFunnel.id, {
+          name: funnelName,
+          mediaUrl: mediaUrl || undefined,
+          welcomeMessage,
+          inlineButtons: inlineButtons.filter(btn => btn.name && btn.value)
+        });
 
-      onSave(newFunnel);
+        // Criar objeto funil atualizado para onSave
+        const updatedFunnel: Funnel = {
+          ...editFunnel,
+          name: funnelName,
+          mediaUrl: mediaUrl || undefined,
+          welcomeMessage,
+          inlineButtons: inlineButtons.filter(btn => btn.name && btn.value),
+          updatedAt: new Date()
+        };
+
+        onSave(updatedFunnel);
+        
+        toast({
+          title: "Sucesso",
+          description: "Funil atualizado com sucesso!",
+        });
+      } else {
+        // Modo de criação
+        const newFunnel = await addFunnel({
+          name: funnelName,
+          mediaUrl: mediaUrl || undefined,
+          welcomeMessage,
+          inlineButtons: inlineButtons.filter(btn => btn.name && btn.value)
+        });
+
+        onSave(newFunnel);
+        
+        toast({
+          title: "Sucesso",
+          description: "Funil criado com sucesso!",
+        });
+      }
       
       // Limpar formulário
       setFunnelName("");
@@ -711,16 +760,11 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
       setDownsells([]);
       
       setOpen(false);
-      
-      toast({
-        title: "Sucesso",
-        description: "Funil criado com sucesso!",
-      });
     } catch (error) {
-      console.error('Erro ao criar funil:', error);
+      console.error('Erro ao salvar funil:', error);
       toast({
         title: "Erro",
-        description: "Erro ao criar funil. Tente novamente.",
+        description: mode === 'edit' ? "Erro ao atualizar funil. Tente novamente." : "Erro ao criar funil. Tente novamente.",
         variant: "destructive"
       });
     }
@@ -770,9 +814,12 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
         </DialogTrigger>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Criar Novo Funil</DialogTitle>
+            <DialogTitle>{mode === 'edit' ? 'Editar Funil' : 'Criar Novo Funil'}</DialogTitle>
             <DialogDescription>
-              Configure seu funil de vendas com mensagem de boas-vindas, botões inline e geração automática de PIX
+              {mode === 'edit' 
+                ? 'Atualize as configurações do seu funil de vendas'
+                : 'Configure seu funil de vendas com mensagem de boas-vindas, botões inline e geração automática de PIX'
+              }
             </DialogDescription>
           </DialogHeader>
 
@@ -1156,7 +1203,7 @@ export const CreateFunnelModal = ({ onSave, trigger }: CreateFunnelModalProps) =
               className="btn-gradient"
             >
               <Save className="h-4 w-4 mr-2" />
-              Salvar Funil
+              {mode === 'edit' ? 'Atualizar Funil' : 'Salvar Funil'}
             </Button>
           </DialogFooter>
         </DialogContent>
